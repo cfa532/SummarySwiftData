@@ -70,7 +70,7 @@ extension TranscriptView: TimerDelegate {
             // check if today's record exists
             let curDate: String = AudioRecord.recordDateFormatter.string(from: Date())
             if let index = records.firstIndex(where: {curDate == AudioRecord.recordDateFormatter.string(from: $0.recordDate)}) {
-                records[index].transcript += speechRecognizer.transcript
+                records[index].transcript +=  speechRecognizer.transcript + "。"
                 records[index].summary = summary
             } else {
                 let curRecord = AudioRecord(transcript: speechRecognizer.transcript, summary: curDate+": "+summary)
