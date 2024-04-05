@@ -27,8 +27,8 @@ actor SpeechRecognizer: ObservableObject {
             }
         }
     }
-    
-    @MainActor var transcript: String = ""
+
+    @MainActor @Published var transcript: String = ""
     static var currentLevel: Float = 0.0
 
     private var audioEngine: AVAudioEngine?
@@ -182,13 +182,15 @@ actor SpeechRecognizer: ObservableObject {
         }
         
         if let result {
-            transcribe(result.bestTranscription.formattedString)
+            let ret = result.bestTranscription.formattedString
+            transcribe(ret)
         }
     }
     
     
     nonisolated private func transcribe(_ message: String) {
         Task { @MainActor in
+            print(message)
             transcript = message
         }
     }

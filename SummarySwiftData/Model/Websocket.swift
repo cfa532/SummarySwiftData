@@ -8,8 +8,10 @@
 import Foundation
 
 @MainActor
-@Observable
-class Websocket: NSObject, URLSessionWebSocketDelegate {
+class Websocket: NSObject, URLSessionWebSocketDelegate, ObservableObject {
+    
+    @Published var isStreaming: Bool = false
+    @Published var streamedText: String = ""
     
     private var urlSession: URLSession?
     var wsTask: URLSessionWebSocketTask?
@@ -41,14 +43,15 @@ class Websocket: NSObject, URLSessionWebSocketDelegate {
     func receive(action: @escaping (_: String) -> Void) {
         // expecting {"type": "result", "answer": "summary content"}
         wsTask?.receive( completionHandler: { result in
+            // once WS begin to receive data
+            
             switch result {
             case .failure(let error):
                 print("WebSocket received an error: \(error)")
-                self.wsTask?.cancel()
+                self.cancel()
             case .success(let message):
                 switch message {
                 case .string(let text):
-                    print("Received text: \(text)")
                     if let data = text.data(using: .utf8) {
                         do {
                             if let dict = try JSONSerialization.jsonObject(with: data) as? NSDictionary {
@@ -56,35 +59,47 @@ class Websocket: NSObject, URLSessionWebSocketDelegate {
                                     if type == "result" {
                                         if let answer = dict["answer"] as? String {
                                             action(answer)
-                                        } else {
-                                            self.wsTask?.cancel()
+                                            self.cancel()
                                         }
                                     } else {
-                                        self.receive(action: action)
+                                        // should be stream type
+                                        if let s = dict["data"] as? String {
+                                            Task { @MainActor in
+                                                self.streamedText += s
+                                            }
+                                            self.receive(action: action)
+                                        }
                                     }
                                 }
                             }
                         } catch {
                             print("Invalid Json string received.")
-                            self.wsTask?.cancel()
+                            self.cancel()
                         }
                     }
                 case .data(let data):
                     print("Received data: \(data)")
-                    self.wsTask?.cancel()
+                    self.cancel()
                 @unknown default:
                     print("Unknown data")
-                    self.wsTask?.cancel()
+                    self.cancel()
                 }
             }
         })
     }
     
     func resume() {
+        Task { @MainActor in
+            self.isStreaming = true
+            self.streamedText = ""
+        }
         wsTask?.resume()
     }
     
     func cancel() {
-        wsTask?.cancel(with: .goingAway, reason: nil)
+        Task { @MainActor in
+            self.isStreaming = false
+        }
+//        wsTask?.cancel(with: .goingAway, reason: nil)
     }
 }

@@ -10,7 +10,6 @@ import SwiftUI
 struct DetailView: View {
     var record: AudioRecord
     @State private var presentRawText = false
-//    @Environment(\.dismiss) private var dismiss
     
     var body: some View {
         VStack (alignment: .leading, spacing: 20) {
@@ -36,38 +35,40 @@ struct DetailView: View {
             }
             .padding(.horizontal) // Adds horizontal padding to the HStack
             
-            Text("Summary")
-                .font(/*@START_MENU_TOKEN@*/.title/*@END_MENU_TOKEN@*/)
-                .padding(.top)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.horizontal)
+//            Text("Summary")
+//                .font(.headline)
+//                .padding(.top)
+//                .frame(maxWidth: .infinity, alignment: .leading)
+//                .padding(.horizontal)
             
-            Text(record.summary)
-                .font(.title2) // Increase the font size to make it more readable
-                .foregroundColor(.primary)
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading) // Aligns the text to the top
+            ScrollView {
+                Text(record.summary)
+                    .font(.subheadline) // Increase the font size to make it more readable
+                    .foregroundColor(.primary)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading) // Aligns the text to the top
                 .padding()
-            Spacer()
+            }
+            .navigationTitle("Summary")
+
         }
         .padding() // Adds padding to the VStack
         .sheet(isPresented: $presentRawText, content: {
-            @Environment(\.dismiss) var dismiss
             NavigationStack {
-                VStack {
+                ScrollView {
                     Text(record.transcript)
                         .padding()
                 }
+                .padding()
                 .background(.ultraThinMaterial)
                 .cornerRadius(16)
                 .toolbar {
                     ToolbarItem(placement: .navigationBarTrailing) {
                         Button(action: {
-//                            dismiss()
                             presentRawText.toggle()
                         }) {
                             Image(systemName: "xmark.circle")
                                 .font(.system(size: 20))
-                                .foregroundColor(Color.red)
+                                .foregroundColor(Color.orange)
                         }
                     }
                 }
