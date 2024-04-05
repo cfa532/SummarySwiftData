@@ -57,7 +57,7 @@ final class RecorderTimer: ObservableObject {
             }
 
             if isSilent() {
-                if curSeconds - self.silenctTimer > 18 {
+                if curSeconds - self.silenctTimer > 1800 {
                     // silent for 30mins, turn off
                     self.timerStopped = true
                 }
