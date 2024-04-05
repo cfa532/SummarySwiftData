@@ -28,8 +28,8 @@ struct RecorderButton: View {
             if isRecording {
                 Image(systemName: "mic")
                 let now = Date.now
-                var start = Calendar.current.date(byAdding: .second, value: Int(0), to: now)!
-                var end = Calendar.current.date(byAdding: .second, value: Int(3600*8), to: start)!
+                let start = Calendar.current.date(byAdding: .second, value: Int(0), to: now)!
+                let end = Calendar.current.date(byAdding: .second, value: Int(3600*8), to: start)!
                  
                 Text(timerInterval: start...end, countsDown: false)
             }
