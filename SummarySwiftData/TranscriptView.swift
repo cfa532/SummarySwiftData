@@ -17,6 +17,7 @@ struct TranscriptView: View {
 
     @StateObject private var websocket = Websocket("ws://52.221.183.236:8505")
     @StateObject private var speechRecognizer = SpeechRecognizer()
+    @StateObject private var recorderTimer = RecorderTimer()
     
     var body: some View {
         NavigationStack {
@@ -55,8 +56,8 @@ struct TranscriptView: View {
             RecorderButton(isRecording: $isRecording) {
                 if isRecording {
                     print("start timer")
-                    Globals.recorderTimer.delegate = self
-                    Globals.recorderTimer.startTimer() {
+                    recorderTimer.delegate = self
+                    recorderTimer.startTimer() {
                         
                         // body of isSilent()
                         print("audio level=", SpeechRecognizer.currentLevel)
@@ -70,7 +71,7 @@ struct TranscriptView: View {
                 } else {
                     print("stop recordering")
                     speechRecognizer.stopTranscribing()
-                    Globals.recorderTimer.stopTimer()
+                    recorderTimer.stopTimer()
                 }
             }
             .frame(alignment: .bottom)
@@ -125,7 +126,7 @@ extension TranscriptView: TimerDelegate {
 
 @MainActor
 enum Globals {
-    static let recorderTimer = RecorderTimer()
+//    static let recorderTimer = RecorderTimer()
 //    static let websocket = Websocket("ws://52.221.183.236:8505")
 }
 
