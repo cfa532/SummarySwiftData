@@ -106,8 +106,8 @@ extension TranscriptView: TimerDelegate {
     
     @MainActor private func sendToAI(_ rawText: String, action: @escaping (_ summary: String)->Void) {
         // Convert the dictionary to Data
-        let msg = ["input":["query": "为下述文字添加标点符号，并适当分段。 "+rawText], "parameters":["llm":"openai","temperature":"0.0","client":"mobile"]] as [String : Any]
-//        let msg = ["input":["query": "提取下述文字的摘要，并添加适当标点符号。如果无法提取，就回答无法提取。 "+rawText], "parameters":["llm":"openai","temperature":"0.0","client":"mobile"]] as [String : Any]
+//        let msg = ["input":["query": "为下述文字添加标点符号，并适当分段。 "+rawText], "parameters":["llm":"openai","temperature":"0.0","client":"mobile"]] as [String : Any]
+        let msg = ["input":["query": "提取下述文字的摘要，并添加标点符号，适当分段。如果无法完成，简单重复原文，不必解释。 "+rawText], "parameters":["llm":"openai","temperature":"0.0","client":"mobile"]] as [String : Any]
         let jsonData = try! JSONSerialization.data(withJSONObject: msg)
         Task {
             // Convert the Data to String
