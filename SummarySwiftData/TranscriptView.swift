@@ -11,7 +11,7 @@ import SwiftData
 struct TranscriptView: View {
     @Environment(\.modelContext) private var modelContext
 
-    @Query(sort: \AudioRecord.recordDate) private var records: [AudioRecord]
+    @Query(sort: \AudioRecord.recordDate, order: .reverse) private var records: [AudioRecord]
     @State private var isRecording = false
     @Binding var errorWrapper: ErrorWrapper?
 
@@ -69,7 +69,6 @@ struct TranscriptView: View {
                     }
                     speechRecognizer.startTranscribing()
                 } else {
-                    print("stop recordering")
                     speechRecognizer.stopTranscribing()
                     recorderTimer.stopTimer()
                 }

@@ -14,6 +14,7 @@ class Websocket: NSObject, URLSessionWebSocketDelegate, ObservableObject {
     @Published var streamedText: String = ""
     
     private var urlSession: URLSession?
+    private var wsUrl = ""
     var wsTask: URLSessionWebSocketTask?
     var message: String = ""
     
@@ -21,6 +22,15 @@ class Websocket: NSObject, URLSessionWebSocketDelegate, ObservableObject {
         super.init()
         self.urlSession = URLSession(configuration: .default, delegate: self, delegateQueue: OperationQueue())
         self.wsTask = urlSession!.webSocketTask(with: URL(string: url)!)
+        self.wsUrl = url
+    }
+    
+    /// make a new connection everytime.
+    public func reset()
+    {
+        self.urlSession?.invalidateAndCancel()
+        self.urlSession = URLSession(configuration: .default, delegate: self, delegateQueue: OperationQueue())
+        self.wsTask = urlSession!.webSocketTask(with: URL(string: self.wsUrl)!)
     }
     
     nonisolated func urlSession(_ session: URLSession, webSocketTask: URLSessionWebSocketTask, didOpenWithProtocol protocol: String?) {
@@ -39,7 +49,7 @@ class Websocket: NSObject, URLSessionWebSocketDelegate, ObservableObject {
             }
         }
     }
-    
+
     func receive(action: @escaping (_: String) -> Void) {
         // expecting {"type": "result", "answer": "summary content"}
         wsTask?.receive( completionHandler: { result in
@@ -100,6 +110,7 @@ class Websocket: NSObject, URLSessionWebSocketDelegate, ObservableObject {
         Task { @MainActor in
             self.isStreaming = false
         }
-//        wsTask?.cancel(with: .goingAway, reason: nil)
+        wsTask?.cancel(with: .goingAway, reason: nil)
+        self.reset()
     }
 }
