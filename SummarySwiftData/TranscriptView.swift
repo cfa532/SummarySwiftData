@@ -15,7 +15,7 @@ struct TranscriptView: View {
     @State private var isRecording = false
     @Binding var errorWrapper: ErrorWrapper?
 
-    @StateObject private var websocket = Websocket("ws://52.221.183.236:8505")
+    @StateObject private var websocket = Websocket("wss://leither.uk/ws")
     @StateObject private var speechRecognizer = SpeechRecognizer()
     @StateObject private var recorderTimer = RecorderTimer()
     

@@ -37,7 +37,7 @@ struct RecorderButton: View {
     RecorderButton(isRecording: .constant(false), buttonAction: {})
 }
 
-/// a trick to fix the timerinvterval clitch.
+/// a trick to fix the timerinvterval glitch.
 struct TimeCounter: View {
     var body: some View {
         Image(systemName: "mic")
