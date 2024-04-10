@@ -48,10 +48,9 @@ final class RecorderTimer: ObservableObject {
         Task { @MainActor in
             guard let startDate, !timerStopped else { return }
             let curSeconds = Date().timeIntervalSince1970
-            let secondsElapsed = Int(curSeconds - startDate.timeIntervalSince1970)
-            self.secondsElapsed = secondsElapsed
+            self.secondsElapsed = Int(curSeconds - startDate.timeIntervalSince1970)
 
-            if secondsElapsed > 36000*8 {
+            if secondsElapsed > 28800 {
                 // worked more than 8hrs, turn off
                 self.timerStopped = true
             }
