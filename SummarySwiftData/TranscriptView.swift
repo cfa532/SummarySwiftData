@@ -114,7 +114,7 @@ extension TranscriptView: TimerDelegate {
             if let jsonString = String(data: jsonData, encoding: .utf8) {
                 print(jsonString)
                 websocket.send(jsonString) { error in
-                    errorWrapper = ErrorWrapper(error: error, guidance: "Failed to send to Websocket")
+                    errorWrapper = ErrorWrapper(error: error, guidance: "Cannot connect to Websocket")
                 }
                 websocket.receive(action: action)
                 websocket.resume()

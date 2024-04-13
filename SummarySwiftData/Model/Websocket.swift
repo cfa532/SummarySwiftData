@@ -52,12 +52,13 @@ class Websocket: NSObject, URLSessionWebSocketDelegate, ObservableObject {
 
     func receive(action: @escaping (_: String) -> Void) {
         // expecting {"type": "result", "answer": "summary content"}
+        // add a timeout timer
         wsTask?.receive( completionHandler: { result in
             // once WS begin to receive data
             
             switch result {
             case .failure(let error):
-                print("WebSocket received an error: \(error)")
+                print("WebSocket failure: \(error)")
                 self.cancel()
             case .success(let message):
                 switch message {

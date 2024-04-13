@@ -30,7 +30,7 @@ extension AudioRecord {
     
     static let recordDateFormatter: DateFormatter = {
         let formatter = DateFormatter()
-        formatter.dateFormat = "YY/MM/dd"
+        formatter.dateFormat = "MM/dd"
         return formatter
     }()
 }
