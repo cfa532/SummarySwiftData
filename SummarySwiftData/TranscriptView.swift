@@ -45,11 +45,12 @@ struct TranscriptView: View {
                             DetailView(record: item)
                         } label: {
                             Text(item.summary)
+                                .font(.subheadline)
                                 .lineLimit(4)
                         }
                     }
                 }
-                .navigationTitle("Summary AI")
+                .navigationTitle("List")
                 .navigationBarTitleDisplayMode(.inline)
             }
             
@@ -85,7 +86,7 @@ extension TranscriptView: TimerDelegate {
         
         // body of action() closure
         isRecording = false
-        guard speechRecognizer.transcript != "" else { return }
+        guard speechRecognizer.transcript != "" else { print("No audio input"); return }
         
         let curDate: String = AudioRecord.recordDateFormatter.string(from: Date())
         Task {
@@ -96,9 +97,11 @@ extension TranscriptView: TimerDelegate {
                     records[index].summary = curDate+": "+summary
                 }
             } else {
+                let curRecord = AudioRecord(transcript: speechRecognizer.transcript+"。", summary: curDate)
+                // If anything goes wrong wit AI, still have the transcript.
+                modelContext.insert(curRecord)
                 sendToAI(speechRecognizer.transcript) { summary in
-                    let curRecord = AudioRecord(transcript: speechRecognizer.transcript+"。", summary: curDate+": "+summary)
-                    modelContext.insert(curRecord)
+                    curRecord.summary = curDate+": "+summary
                 }
             }
         }

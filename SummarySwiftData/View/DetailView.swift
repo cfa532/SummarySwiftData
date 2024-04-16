@@ -42,8 +42,8 @@ struct DetailView: View {
 //                .padding(.horizontal)
             
             ScrollView {
-                Text(record.summary)
-                    .font(.subheadline) // Increase the font size to make it more readable
+                Text(record.summary.isEmpty ? record.transcript : record.summary )
+                    .font(.title3) // Increase the font size to make it more readable
                     .foregroundColor(.primary)
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading) // Aligns the text to the top
                 .padding()

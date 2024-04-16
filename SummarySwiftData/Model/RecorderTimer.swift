@@ -11,7 +11,7 @@ protocol TimerDelegate {
     func timerStopped() -> Void
 }
 
-@MainActor
+//@MainActor
 final class RecorderTimer: ObservableObject {
     @Published var secondsElapsed = 0   // total num of seconds after timer started
     var delegate: TimerDelegate?
@@ -45,7 +45,7 @@ final class RecorderTimer: ObservableObject {
     }
     
     nonisolated private func update(isSilent: @escaping ()->Bool) {
-        Task { @MainActor in
+//        Task { @MainActor in
             guard let startDate, !timerStopped else { return }
             let curSeconds = Date().timeIntervalSince1970
             self.secondsElapsed = Int(curSeconds - startDate.timeIntervalSince1970)
@@ -63,7 +63,7 @@ final class RecorderTimer: ObservableObject {
             } else {
                 self.silenctTimer = curSeconds  // reset silence timer if there is input audio
             }
-        }
+//        }
     }
     
     func stopTimer() {
