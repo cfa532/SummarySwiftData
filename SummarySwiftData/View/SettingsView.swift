@@ -15,7 +15,7 @@ struct SettingsView: View {
     @State private var setting: AppSettings  = AppSettings.defaultSettings {
         didSet {
             if let t = Int(setting.audioSilentDB) {
-                if t>0 { setting.audioSilentDB = "0" }
+                if t > -20 { setting.audioSilentDB = "-20" }
                 else if t < -80 {
                     setting.audioSilentDB = "-80"
                 }
@@ -24,22 +24,52 @@ struct SettingsView: View {
             }
         }
     }
+    @State private var selectedLocale: RecognizerLocals = RecognizerLocals.Current
     
     var body: some View {
         NavigationStack {
             Form {
-                TextEditor(text: $setting.prompt)
-                    .frame(height: 60, alignment: .topLeading)
-                TextField("Locale", text: $setting.speechLocale)
-                TextField("最低音量", text: $setting.audioSilentDB)
-                TextField("URL", text: $setting.wssURL)
+                VStack(alignment: .leading) {
+                    Text("Prompt to AI:")
+                        .font(.headline)
+                    TextEditor(text: $setting.prompt)
+                        .frame(height: 80, alignment: .topLeading)
+                }
+                VStack(alignment: .leading) {
+                    Text("Webservice URL:")
+                        .font(.headline)
+                    TextField("URL", text: $setting.wssURL)
+                }
+                HStack{
+                    Picker("Language to recognize:", selection: $selectedLocale) {
+                        ForEach(RecognizerLocals.allCases, id:\.self) { option in
+                            switch option {
+                            case .Chinese:
+                                Text("Chinese")
+                            case .English:
+                                Text("English")
+                            case .Japanese:
+                                Text("Japanese")
+                            default:
+                                Text("Current locale")
+                            }
+                        }
+                    }.font(.headline)
+                }
+                HStack {
+                    Text("Audio thresh hold:")
+                        .font(.headline)
+                    TextField("最低音量", text: $setting.audioSilentDB)
+                }
             }
             .onAppear(perform: {
                 guard !settings.isEmpty else { return }
                 setting = settings[0]
+                selectedLocale = RecognizerLocals(rawValue: setting.speechLocale)!
             })
             .onDisappear(perform: {
-                print(settings[0].prompt)
+                settings[0].speechLocale = selectedLocale.rawValue
+                print(settings[0].speechLocale, selectedLocale)
             })
         }
         .navigationTitle("Settings")
@@ -51,6 +81,7 @@ struct SettingsView: View {
                     settings[0].speechLocale = AppSettings.defaultSettings.speechLocale
                     settings[0].audioSilentDB = AppSettings.defaultSettings.audioSilentDB
                     settings[0].wssURL = AppSettings.defaultSettings.wssURL
+                    selectedLocale = RecognizerLocals.Current
                 }
             }
         }

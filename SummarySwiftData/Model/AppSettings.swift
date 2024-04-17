@@ -27,25 +27,16 @@ extension AppSettings {
     static var defaultSettings = AppSettings(prompt: "提取下述文字的摘要，并添加标点符号，适当分段，修改错别字。",
                                              wssURL: "wss://leither.uk/ws",
                                              audioSilentDB: "-40",
-                                             speechLocale: Locale.current.identifier
+                                             speechLocale: RecognizerLocals.Current.rawValue
+//                                             speechLocale: Locale.current.identifier
     )
 }
 
-@propertyWrapper
-struct AudioLevelDB {
-    var wrappedValue: AppSettings {
-        didSet {
-            if let t = Int(wrappedValue.audioSilentDB) {
-                if t>0 { wrappedValue.audioSilentDB = "0" }
-                else if t < -80 {
-                    wrappedValue.audioSilentDB = "-80"
-                }
-            } else {
-                wrappedValue.audioSilentDB = "-40"
-            }
-        }
-    }
-    init(_ wrappedValue: AppSettings) {
-        self.wrappedValue = wrappedValue
-    }
+enum RecognizerLocals: String, CaseIterable, Identifiable {
+    case English = "en_US"
+    case Japanese = "ja_JP"
+    case Chinese = "zh_CN"
+    case Current = "cur_Loc"
+    
+    var id: Self { self }
 }
