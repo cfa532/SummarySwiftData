@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		46976B242BCED885003A9F7B /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46976B232BCED884003A9F7B /* AppSettings.swift */; };
+		46976B262BCF5E19003A9F7B /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46976B252BCF5E19003A9F7B /* SettingsView.swift */; };
 		46D9B4282BBF93A800AF9945 /* SummarySwiftDataApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46D9B4272BBF93A800AF9945 /* SummarySwiftDataApp.swift */; };
 		46D9B42A2BBF93A800AF9945 /* TranscriptView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46D9B4292BBF93A800AF9945 /* TranscriptView.swift */; };
 		46D9B42E2BBF93AA00AF9945 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 46D9B42D2BBF93AA00AF9945 /* Assets.xcassets */; };
@@ -22,6 +24,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		46976B232BCED884003A9F7B /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
+		46976B252BCF5E19003A9F7B /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		46D9B4242BBF93A800AF9945 /* SummarySwiftData.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SummarySwiftData.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		46D9B4272BBF93A800AF9945 /* SummarySwiftDataApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummarySwiftDataApp.swift; sourceTree = "<group>"; };
 		46D9B4292BBF93A800AF9945 /* TranscriptView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptView.swift; sourceTree = "<group>"; };
@@ -95,6 +99,7 @@
 				46D9B4492BBF960500AF9945 /* Websocket.swift */,
 				46D9B4472BBF960000AF9945 /* RecorderTimer.swift */,
 				46D9B43F2BBF947B00AF9945 /* ErrorWrapper.swift */,
+				46976B232BCED884003A9F7B /* AppSettings.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -105,6 +110,7 @@
 				46D9B43D2BBF946B00AF9945 /* DetailView.swift */,
 				46D9B43B2BBF946500AF9945 /* ErrorView.swift */,
 				46D9B4392BBF945500AF9945 /* RecorderButton.swift */,
+				46976B252BCF5E19003A9F7B /* SettingsView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -186,7 +192,9 @@
 				46D9B4482BBF960000AF9945 /* RecorderTimer.swift in Sources */,
 				46D9B42A2BBF93A800AF9945 /* TranscriptView.swift in Sources */,
 				46D9B43A2BBF945500AF9945 /* RecorderButton.swift in Sources */,
+				46976B242BCED885003A9F7B /* AppSettings.swift in Sources */,
 				46D9B4442BBF95F500AF9945 /* SpeechRecognizer.swift in Sources */,
+				46976B262BCF5E19003A9F7B /* SettingsView.swift in Sources */,
 				46D9B4422BBF949F00AF9945 /* AudioRecord.swift in Sources */,
 				46D9B4282BBF93A800AF9945 /* SummarySwiftDataApp.swift in Sources */,
 			);
@@ -254,6 +262,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				"SWIFT_ACTIVE_COMPILATION_CONDITIONS[arch=*]" = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;

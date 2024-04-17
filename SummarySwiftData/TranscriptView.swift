@@ -10,11 +10,11 @@ import SwiftData
 
 struct TranscriptView: View {
     @Environment(\.modelContext) private var modelContext
-
     @Query(sort: \AudioRecord.recordDate, order: .reverse) private var records: [AudioRecord]
+    @Query private var settings: [AppSettings]
     @State private var isRecording = false
     @Binding var errorWrapper: ErrorWrapper?
-
+    
     @StateObject private var websocket = Websocket("wss://leither.uk/ws")
     @StateObject private var speechRecognizer = SpeechRecognizer()
     @StateObject private var recorderTimer = RecorderTimer()
@@ -50,8 +50,32 @@ struct TranscriptView: View {
                         }
                     }
                 }
-                .navigationTitle("List")
+                .overlay(content: {
+                    if records.isEmpty {
+                        ContentUnavailableView(label: {
+                            Label("No records", systemImage: "list.bullet.rectangle.portrait")
+                        }, description: {
+                            Text("Push the START button to record your own speech. A summary will be generated automatically after STOP button is pushed.")
+                        })
+                    }
+                })
+                .navigationTitle("Daily Records")
                 .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItemGroup(placement: .topBarTrailing, content: {
+                        NavigationLink(destination: SettingsView()) {
+                            Image(systemName: "gearshape")
+                                .resizable()
+                                .frame(width: 24, height: 24)
+                        }
+                    })
+                }
+                .onAppear(perform: {
+                    if  settings.isEmpty {
+                        modelContext.insert(AppSettings.defaultSettings)
+                        try? modelContext.save()
+                    }
+                })
             }
             
             RecorderButton(isRecording: $isRecording) {
@@ -76,7 +100,6 @@ struct TranscriptView: View {
             }
             .frame(alignment: .bottom)
         }
-        
     }
 }
 
@@ -109,8 +132,9 @@ extension TranscriptView: TimerDelegate {
     
     @MainActor private func sendToAI(_ rawText: String, action: @escaping (_ summary: String)->Void) {
         // Convert the dictionary to Data
-//        let msg = ["input":["query": "为下述文字添加标点符号，并适当分段。 "+rawText], "parameters":["llm":"openai","temperature":"0.0","client":"mobile"]] as [String : Any]
-        let msg = ["input":["prompt": "提取下述文字的摘要，并添加标点符号，适当分段，修改错别字。",["rawtext"]:rawText], "parameters":["llm":"openai","temperature":"0.0","client":"mobile"]] as [String : Any]
+        //        let msg = ["input":["query": "为下述文字添加标点符号，并适当分段。 "+rawText], "parameters":["llm":"openai","temperature":"0.0","client":"mobile"]] as [String : Any]
+        guard !settings.isEmpty else { return }
+        let msg = ["input":["prompt": settings[0].prompt, "rawtext":rawText], "parameters":["llm":"openai","temperature":"0.0","client":"mobile"]] as [String : Any]
         let jsonData = try! JSONSerialization.data(withJSONObject: msg)
         Task {
             // Convert the Data to String
@@ -128,11 +152,11 @@ extension TranscriptView: TimerDelegate {
 
 @MainActor
 enum Globals {
-//    static let recorderTimer = RecorderTimer()
-//    static let websocket = Websocket("ws://52.221.183.236:8505")
+    //    static let recorderTimer = RecorderTimer()
+    //    static let websocket = Websocket("ws://52.221.183.236:8505")
 }
 
 #Preview {
     TranscriptView(errorWrapper: .constant(.emptyError))
-        .modelContainer(for: AudioRecord.self, inMemory: true)
+        .modelContainer(for: AudioRecord.self, inMemory: false)
 }

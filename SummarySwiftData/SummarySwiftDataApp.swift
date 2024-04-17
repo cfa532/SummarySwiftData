@@ -11,10 +11,13 @@ import SwiftData
 @main
 struct SummarySwiftDataApp: App {
     @State private var errorWrapper: ErrorWrapper?
+//    @AppStorage("hasRunBefore") var hasRunBefore = false
+//    @Environment(\.modelContext) private var modelContext
+//    @Query private var settings: [AppSettings]
     
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
-            AudioRecord.self,
+            AudioRecord.self, AppSettings.self
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
         
@@ -28,6 +31,8 @@ struct SummarySwiftDataApp: App {
     var body: some Scene {
         WindowGroup {
             TranscriptView(errorWrapper: $errorWrapper)
+                .onAppear(perform: {
+                })
             //                .task {
             //                    // do something
             //                }
