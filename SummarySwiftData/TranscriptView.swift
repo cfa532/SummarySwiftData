@@ -15,10 +15,10 @@ struct TranscriptView: View {
     @State private var isRecording = false
     @Binding var errorWrapper: ErrorWrapper?
     
-    @StateObject private var websocket = Websocket("wss://leither.uk/ws")
-    @StateObject private var speechRecognizer = SpeechRecognizer()
+    @StateObject private var websocket = Websocket()
     @StateObject private var recorderTimer = RecorderTimer()
-    
+    @StateObject private var speechRecognizer = SpeechRecognizer()
+
     var body: some View {
         NavigationStack {
             if isRecording {
@@ -26,6 +26,7 @@ struct TranscriptView: View {
                     Label("Recording...", systemImage: "mic")
                         .padding()
                     Text(speechRecognizer.transcript)
+                        .frame(height: 300)
                 }
                 .padding()
                 Spacer()
@@ -92,7 +93,10 @@ struct TranscriptView: View {
                             return false
                         }
                     }
-                    speechRecognizer.startTranscribing()
+                    Task { @MainActor in
+                        await self.speechRecognizer.setup(locale: settings[0].speechLocale)
+                        speechRecognizer.startTranscribing()
+                    }
                 } else {
                     speechRecognizer.stopTranscribing()
                     recorderTimer.stopTimer()
@@ -144,16 +148,10 @@ extension TranscriptView: TimerDelegate {
                     errorWrapper = ErrorWrapper(error: error, guidance: "Cannot connect to Websocket")
                 }
                 websocket.receive(action: action)
-                websocket.resume()
+//                websocket.resume(url: self.settings[0].wssURL)
             }
         }
     }
-}
-
-@MainActor
-enum Globals {
-    //    static let recorderTimer = RecorderTimer()
-    //    static let websocket = Websocket("ws://52.221.183.236:8505")
 }
 
 #Preview {

@@ -27,7 +27,7 @@ extension AppSettings {
     static var defaultSettings = AppSettings(prompt: "提取下述文字的摘要，并添加标点符号，适当分段，修改错别字。",
                                              wssURL: "wss://leither.uk/ws",
                                              audioSilentDB: "-40",
-                                             speechLocale: RecognizerLocals.Current.rawValue
+                                             speechLocale: RecognizerLocals.Chinese.rawValue
 //                                             speechLocale: Locale.current.identifier
     )
 }
@@ -36,7 +36,6 @@ enum RecognizerLocals: String, CaseIterable, Identifiable {
     case English = "en_US"
     case Japanese = "ja_JP"
     case Chinese = "zh_CN"
-    case Current = "cur_Loc"
     
     var id: Self { self }
 }

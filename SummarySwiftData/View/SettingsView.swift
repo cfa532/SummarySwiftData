@@ -24,7 +24,7 @@ struct SettingsView: View {
             }
         }
     }
-    @State private var selectedLocale: RecognizerLocals = RecognizerLocals.Current
+    @State private var selectedLocale: RecognizerLocals = RecognizerLocals.Chinese
     
     var body: some View {
         NavigationStack {
@@ -43,23 +43,15 @@ struct SettingsView: View {
                 HStack{
                     Picker("Language to recognize:", selection: $selectedLocale) {
                         ForEach(RecognizerLocals.allCases, id:\.self) { option in
-                            switch option {
-                            case .Chinese:
-                                Text("Chinese")
-                            case .English:
-                                Text("English")
-                            case .Japanese:
-                                Text("Japanese")
-                            default:
-                                Text("Current locale")
-                            }
+                            Text(String(describing: option))
+//                            Text(String(stringLiteral: option)
                         }
                     }.font(.headline)
                 }
                 HStack {
                     Text("Audio thresh hold:")
                         .font(.headline)
-                    TextField("最低音量", text: $setting.audioSilentDB)
+                    TextField("Min Audio Level", text: $setting.audioSilentDB)
                 }
             }
             .onAppear(perform: {
@@ -69,7 +61,6 @@ struct SettingsView: View {
             })
             .onDisappear(perform: {
                 settings[0].speechLocale = selectedLocale.rawValue
-                print(settings[0].speechLocale, selectedLocale)
             })
         }
         .navigationTitle("Settings")
@@ -81,7 +72,7 @@ struct SettingsView: View {
                     settings[0].speechLocale = AppSettings.defaultSettings.speechLocale
                     settings[0].audioSilentDB = AppSettings.defaultSettings.audioSilentDB
                     settings[0].wssURL = AppSettings.defaultSettings.wssURL
-                    selectedLocale = RecognizerLocals.Current
+                    selectedLocale = RecognizerLocals.Chinese
                 }
             }
         }

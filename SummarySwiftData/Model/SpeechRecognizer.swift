@@ -34,14 +34,18 @@ actor SpeechRecognizer: ObservableObject {
     private var audioEngine: AVAudioEngine?
     private var request: SFSpeechAudioBufferRecognitionRequest?
     private var task: SFSpeechRecognitionTask?
-    private let recognizer: SFSpeechRecognizer?
+    private var recognizer: SFSpeechRecognizer?
     
     /**
      Initializes a new speech recognizer. If this is the first time you've used the class, it
      requests access to the speech recognizer and the microphone.
      */
-    init() {
-        recognizer = SFSpeechRecognizer(locale: Locale.init(identifier: "zh-CN"))   // 听懂中文
+//    init(locale: String) {
+//        
+//    }
+    
+    func setup(locale: String) {
+        recognizer = SFSpeechRecognizer(locale: Locale.init(identifier: locale))
         guard recognizer != nil else {
             transcribe(RecognizerError.nilRecognizer)
             return
