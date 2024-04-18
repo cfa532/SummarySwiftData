@@ -44,7 +44,6 @@ struct SettingsView: View {
                     Picker("Language to recognize:", selection: $selectedLocale) {
                         ForEach(RecognizerLocals.allCases, id:\.self) { option in
                             Text(String(describing: option))
-//                            Text(String(stringLiteral: option)
                         }
                     }.font(.headline)
                 }

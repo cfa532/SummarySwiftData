@@ -21,7 +21,7 @@ final class RecorderTimer: ObservableObject {
         didSet {
             if timerStopped {
                 timer?.invalidate()
-                delegate?.timerStopped()
+                delegate?.timerStopped()    // send query to Ai
                 startDate = nil
                 print("Timer stopped")
             }

@@ -14,23 +14,17 @@ class Websocket: NSObject, URLSessionWebSocketDelegate, ObservableObject {
     @Published var streamedText: String = ""
     
     private var urlSession: URLSession?
-    private var wsUrl = ""
-    var wsTask: URLSessionWebSocketTask?
-    var message: String = ""
+    private var wsUrl: String?
+    private var wsTask: URLSessionWebSocketTask?
     
-    init(_ url: String) {
+    override init() {
         super.init()
         self.urlSession = URLSession(configuration: .default, delegate: self, delegateQueue: OperationQueue())
-        self.wsTask = urlSession!.webSocketTask(with: URL(string: url)!)
-        self.wsUrl = url
     }
     
-    /// make a new connection everytime.
-    public func reset()
-    {
-        self.urlSession?.invalidateAndCancel()
-        self.urlSession = URLSession(configuration: .default, delegate: self, delegateQueue: OperationQueue())
-        self.wsTask = urlSession!.webSocketTask(with: URL(string: self.wsUrl)!)
+    func prepare(_ url: String) {
+        self.wsTask = urlSession!.webSocketTask(with: URL(string: url)!)
+        self.wsUrl = url
     }
     
     nonisolated func urlSession(_ session: URLSession, webSocketTask: URLSessionWebSocketTask, didOpenWithProtocol protocol: String?) {
@@ -102,7 +96,6 @@ class Websocket: NSObject, URLSessionWebSocketDelegate, ObservableObject {
     func resume() {
         Task { @MainActor in
             self.isStreaming = true
-            self.streamedText = ""
         }
         wsTask?.resume()
     }
@@ -110,8 +103,9 @@ class Websocket: NSObject, URLSessionWebSocketDelegate, ObservableObject {
     func cancel() {
         Task { @MainActor in
             self.isStreaming = false
+            self.streamedText = ""
         }
         wsTask?.cancel(with: .goingAway, reason: nil)
-        self.reset()
+//        urlSession?.invalidateAndCancel()
     }
 }

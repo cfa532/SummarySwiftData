@@ -30,7 +30,7 @@ struct TranscriptView: View {
                 }
                 .padding()
                 Spacer()
-            } else if websocket.isStreaming {
+            } else if websocket.streamedText != "" {
                 VStack {
                     Label("Streaming from AI", systemImage: "theatermask.and.paintbrush")
                         .padding()
@@ -113,7 +113,7 @@ extension TranscriptView: TimerDelegate {
         
         // body of action() closure
         isRecording = false
-        guard speechRecognizer.transcript != "" else { print("No audio input"); return }
+//        guard speechRecognizer.transcript != "" else { print("No audio input"); return }
         
         let curDate: String = AudioRecord.recordDateFormatter.string(from: Date())
         Task {
@@ -138,17 +138,17 @@ extension TranscriptView: TimerDelegate {
         // Convert the dictionary to Data
         //        let msg = ["input":["query": "为下述文字添加标点符号，并适当分段。 "+rawText], "parameters":["llm":"openai","temperature":"0.0","client":"mobile"]] as [String : Any]
         guard !settings.isEmpty else { return }
-        let msg = ["input":["prompt": settings[0].prompt, "rawtext":rawText], "parameters":["llm":"openai","temperature":"0.0","client":"mobile"]] as [String : Any]
+        let msg = ["input":["prompt": settings[0].prompt, "rawtext": rawText], "parameters":["llm":"openai","temperature":"0.0","client":"mobile","model":"gpt-4"]] as [String : Any]
         let jsonData = try! JSONSerialization.data(withJSONObject: msg)
         Task {
             // Convert the Data to String
             if let jsonString = String(data: jsonData, encoding: .utf8) {
-                print(jsonString)
+                websocket.prepare(self.settings[0].wssURL)
                 websocket.send(jsonString) { error in
                     errorWrapper = ErrorWrapper(error: error, guidance: "Cannot connect to Websocket")
                 }
                 websocket.receive(action: action)
-//                websocket.resume(url: self.settings[0].wssURL)
+                websocket.resume()
             }
         }
     }
