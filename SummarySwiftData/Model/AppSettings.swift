@@ -39,3 +39,9 @@ enum RecognizerLocals: String, CaseIterable, Identifiable {
     
     var id: Self { self }
 }
+
+// system constants
+final class AppConstants {
+    static let MaxSilentSeconds = 1800      // max waiting time if no audio input, 30min
+    static let MaxRecordSeconds = 28800     // max working hours, 8hrs
+}

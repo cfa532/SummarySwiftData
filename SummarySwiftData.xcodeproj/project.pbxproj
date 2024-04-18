@@ -26,6 +26,7 @@
 /* Begin PBXFileReference section */
 		46976B232BCED884003A9F7B /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
 		46976B252BCF5E19003A9F7B /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		46976B272BD12E49003A9F7B /* Proxy.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = Proxy.md; sourceTree = "<group>"; };
 		46D9B4242BBF93A800AF9945 /* SummarySwiftData.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SummarySwiftData.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		46D9B4272BBF93A800AF9945 /* SummarySwiftDataApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummarySwiftDataApp.swift; sourceTree = "<group>"; };
 		46D9B4292BBF93A800AF9945 /* TranscriptView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptView.swift; sourceTree = "<group>"; };
@@ -79,6 +80,7 @@
 				46D9B4292BBF93A800AF9945 /* TranscriptView.swift */,
 				46D9B42D2BBF93AA00AF9945 /* Assets.xcassets */,
 				46D9B42F2BBF93AA00AF9945 /* Preview Content */,
+				46976B272BD12E49003A9F7B /* Proxy.md */,
 			);
 			path = SummarySwiftData;
 			sourceTree = "<group>";

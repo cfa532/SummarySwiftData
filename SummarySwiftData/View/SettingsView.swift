@@ -56,6 +56,8 @@ struct SettingsView: View {
             .onAppear(perform: {
                 guard !settings.isEmpty else { return }
                 setting = settings[0]
+                print(setting.speechLocale)
+//                setting.speechLocale = "zh_CN"
                 selectedLocale = RecognizerLocals(rawValue: setting.speechLocale)!
             })
             .onDisappear(perform: {
