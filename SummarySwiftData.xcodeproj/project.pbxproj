@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		461ADD492BD23A2800C0DD94 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 461ADD482BD23A2800C0DD94 /* Launch Screen.storyboard */; };
 		46976B242BCED885003A9F7B /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46976B232BCED884003A9F7B /* AppSettings.swift */; };
 		46976B262BCF5E19003A9F7B /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46976B252BCF5E19003A9F7B /* SettingsView.swift */; };
 		46D9B4282BBF93A800AF9945 /* SummarySwiftDataApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46D9B4272BBF93A800AF9945 /* SummarySwiftDataApp.swift */; };
@@ -24,6 +25,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		461ADD482BD23A2800C0DD94 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		46976B232BCED884003A9F7B /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
 		46976B252BCF5E19003A9F7B /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		46976B272BD12E49003A9F7B /* Proxy.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = Proxy.md; sourceTree = "<group>"; };
@@ -113,6 +115,7 @@
 				46D9B43B2BBF946500AF9945 /* ErrorView.swift */,
 				46D9B4392BBF945500AF9945 /* RecorderButton.swift */,
 				46976B252BCF5E19003A9F7B /* SettingsView.swift */,
+				461ADD482BD23A2800C0DD94 /* Launch Screen.storyboard */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -175,6 +178,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				461ADD492BD23A2800C0DD94 /* Launch Screen.storyboard in Resources */,
 				46D9B4312BBF93AA00AF9945 /* Preview Assets.xcassets in Resources */,
 				46D9B42E2BBF93AA00AF9945 /* Assets.xcassets in Resources */,
 			);
@@ -341,7 +345,6 @@
 				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "To recongnize user audio input";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -373,7 +376,6 @@
 				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "To recongnize user audio input";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (

@@ -10,31 +10,34 @@ import SwiftData
 
 struct DetailView: View {
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+
     @Query private var settings: [AppSettings]
-    var record: AudioRecord
     @State private var presentRawText = false
     @StateObject private var websocket = Websocket()
     @State private var isShowingDialog = false
+    @State private var showShareSheet = false
+    var record: AudioRecord
     
     var body: some View {
-        VStack (alignment: .leading, spacing: 20) {
+        VStack (alignment: .leading) {
             HStack {
                 Label() {
                     Text(AudioRecord.recordDateFormatter.string(from: record.recordDate))
-                        .font(.headline) // Makes the date text larger
-                        .foregroundColor(.primary) // Changes the color of the date text
+                        .font(.subheadline) // Makes the date text larger
+                        .foregroundColor(.secondary) // Changes the color of the date text
                 } icon: {
                     Image(systemName: "calendar")
-                        .foregroundColor(.secondary) // Changes the color of the calendar icon
+                        .foregroundColor(.primary) // Changes the color of the calendar icon
                 }
                 Spacer()
                 
                 Button(action: {
                     presentRawText.toggle()
                 }, label: {
-                    Text("Raw Text >>")
+                    Text("Transcript>>")
                         .font(.subheadline) // Makes the button text smaller
-                        .foregroundColor(.blue) // Changes the color of the button text
+                        .foregroundColor(.secondary) // Changes the color of the button text
                 })
                 //                .padding(.horizontal) // Adds horizontal padding to the button
             }
@@ -56,13 +59,47 @@ struct DetailView: View {
                 }
             }
         }
+        .navigationBarBackButtonHidden(true)
         .navigationTitle("Summary")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar(content: {
-            ToolbarItemGroup(placement: .bottomBar) {
-                Button("Regenerate summary") {        // regenerate AI summary
-                    isShowingDialog = true
+            ToolbarItemGroup(placement: .topBarLeading) {
+                Button(action: {
+                    self.presentationMode.wrappedValue.dismiss()
+                }, label: {
+                    Image(systemName: "arrow.uturn.left")
+                        .resizable()
+                        .foregroundColor(.primary)
+//                        .fontWeight(.bold)
+                })
+            }
+            ToolbarItemGroup(placement: .topBarTrailing) {
+                Button(action: {
+                    // sharing menu
+                    showShareSheet = true
+                }) {
+                    Image(systemName: "square.and.arrow.up")
+                        .resizable()
+                        .foregroundColor(.primary)
                 }
+                .sheet(isPresented: $showShareSheet, content: {
+                    let textToShare = AudioRecord.recordDateFormatter.string(from: record.recordDate)+": "+record.summary
+                    ShareSheet(activityItems: [textToShare])
+                })
+            }
+            ToolbarItemGroup(placement: .bottomBar) {
+                Button(action: {
+                    // regenerate AI summary
+                    isShowingDialog = true
+                }) {
+                    Text("Redo summary")
+                        .padding(5)
+                }
+//                .border(/*@START_MENU_TOKEN@*/Color.black/*@END_MENU_TOKEN@*/, width: 0.3)
+                .foregroundColor(.black)
+                .background(Color(white: 0.8))
+                .cornerRadius(5.0)
+                .shadow(color:.gray, radius: 2, x: 2, y: 2)
                 .confirmationDialog(
                     Text("Regenerate summary?"),
                     isPresented: $isShowingDialog
@@ -101,6 +138,15 @@ struct DetailView: View {
                 }
             }
         })
+    }
+    
+    struct ShareSheet: UIViewControllerRepresentable {
+        let activityItems: [Any]
+        func makeUIViewController(context: Context) -> UIActivityViewController {
+            return UIActivityViewController(activityItems: activityItems, applicationActivities: nil)
+        }
+
+        func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {}
     }
 }
 

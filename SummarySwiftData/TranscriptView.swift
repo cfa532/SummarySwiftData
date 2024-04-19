@@ -76,6 +76,7 @@ struct TranscriptView: View {
                             Image(systemName: "gearshape")
                                 .resizable()
                                 .frame(width: 24, height: 24)
+                                .foregroundColor(.black)
                         }
                     })
                 }
@@ -102,13 +103,13 @@ struct TranscriptView: View {
             
             RecorderButton(isRecording: $isRecording) {
                 if isRecording {
-                    print("start timer")
+                    print("Start timer. Audio db=\(self.settings[0].audioSilentDB)")
                     recorderTimer.delegate = self
                     recorderTimer.startTimer() {
                         
                         // body of isSilent()
                         print("audio level=", SpeechRecognizer.currentLevel)
-                        if SpeechRecognizer.currentLevel < -40 {
+                        if SpeechRecognizer.currentLevel < Float(self.settings[0].audioSilentDB)! {
                             return true
                         } else {
                             return false

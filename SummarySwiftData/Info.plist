@@ -15,5 +15,14 @@
 		<string>fetch</string>
 		<string>processing</string>
 	</array>
+	<key>UILaunchScreen</key>
+	<dict>
+		<key>UILaunchScreen</key>
+		<string>Launch Screen</string>
+		<key>UIColorName</key>
+		<string>background_LC</string>
+		<key>UIImageName</key>
+		<string>大耳朵</string>
+	</dict>
 </dict>
 </plist>
