@@ -24,7 +24,7 @@ struct TranscriptView: View {
             if isRecording {
                 ScrollView {
                     ScrollViewReader { proxy in
-                        let t = "Recognizing....in " + String(describing: RecognizerLocals(rawValue: settings[0].speechLocale)) + "\n"
+                        let t = "Recognizing....in " + String(describing: RecognizerLocals(rawValue: settings[0].speechLocale)!) + "\n"
                         let message = t + speechRecognizer.transcript
                         Text(message)
                             .id(message)
