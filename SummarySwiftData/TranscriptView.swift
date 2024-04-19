@@ -18,30 +18,32 @@ struct TranscriptView: View {
     @StateObject private var websocket = Websocket()
     @StateObject private var recorderTimer = RecorderTimer()
     @StateObject private var speechRecognizer = SpeechRecognizer()
-
+    
     var body: some View {
         NavigationStack {
             if isRecording {
-                VStack {
-                    Label("Recognizing....in "+String(describing: RecognizerLocals(rawValue: settings[0].speechLocale)!), systemImage: "mic")
-                        .font(.headline)
-                        .padding()
-                    ScrollView {
-                        Text(speechRecognizer.transcript)
+                ScrollView {
+                    ScrollViewReader { proxy in
+                        let t = "Recognizing....in " + String(describing: RecognizerLocals(rawValue: settings[0].speechLocale)) + "\n"
+                        let message = t + speechRecognizer.transcript
+                        Text(message)
+                            .id(message)
+                            .onChange(of: message, {
+                                proxy.scrollTo(message, anchor: .bottom)
+                            })
                     }
                 }
-                .padding()
             } else if websocket.isStreaming {
-                VStack {
-                    Label("Streaming from AI", systemImage: "theatermask.and.paintbrush")
-                        .padding()
-                    ScrollView {
-                        Text(websocket.streamedText)
-//                            .frame(alignment: .topLeading)
+                ScrollView {
+                    ScrollViewReader { proxy in
+                        let message = "Streaming from AI...\n" + websocket.streamedText
+                        Text(message)
+                            .id(message)
+                            .onChange(of: message, {
+                                proxy.scrollTo(message, anchor: .bottom)
+                            })
                     }
                 }
-                .padding()
-                Spacer()
             }
             else {
                 List {
@@ -49,10 +51,12 @@ struct TranscriptView: View {
                         NavigationLink {
                             DetailView(record: item)
                         } label: {
-                            Text(item.summary)
+                            let curDate: String = AudioRecord.recordDateFormatter.string(from: item.recordDate)
+                            Text(curDate+": "+item.summary)
                                 .font(.subheadline)
                                 .lineLimit(4)
                         }
+//                        Divider()
                     }
                 }
                 .overlay(content: {
@@ -80,7 +84,7 @@ struct TranscriptView: View {
                     print(lc!)
                     if settings.isEmpty {
                         // first run of the App, settings not stored by SwiftData yet.
-
+                        
                         let setting = AppSettings.defaultSettings
                         switch lc {
                         case "en":
@@ -151,25 +155,6 @@ extension TranscriptView: TimerDelegate {
             }
         }
     }
-    
-//    @MainActor private func sendToAI(_ rawText: String, action: @escaping (_ summary: String)->Void) {
-//        // Convert the dictionary to Data
-//        //        let msg = ["input":["query": "为下述文字添加标点符号，并适当分段。 "+rawText], "parameters":["llm":"openai","temperature":"0.0","client":"mobile"]] as [String : Any]
-//        guard !settings.isEmpty else { return }
-//        let msg = ["input":["prompt": settings[0].prompt, "rawtext": rawText], "parameters":["llm":"openai","temperature":"0.0","client":"mobile","model":"gpt-4"]] as [String : Any]
-//        let jsonData = try! JSONSerialization.data(withJSONObject: msg)
-//        Task {
-//            // Convert the Data to String
-//            if let jsonString = String(data: jsonData, encoding: .utf8) {
-//                websocket.prepare(self.settings[0].wssURL)
-//                websocket.send(jsonString) { error in
-//                    errorWrapper = ErrorWrapper(error: error, guidance: "Cannot connect to Websocket")
-//                }
-//                websocket.receive(action: action)
-//                websocket.resume()
-//            }
-//        }
-//    }
 }
 
 #Preview {

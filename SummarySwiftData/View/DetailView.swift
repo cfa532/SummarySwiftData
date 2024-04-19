@@ -15,7 +15,7 @@ struct DetailView: View {
     @State private var presentRawText = false
     @StateObject private var websocket = Websocket()
     @State private var isShowingDialog = false
-
+    
     var body: some View {
         VStack (alignment: .leading, spacing: 20) {
             HStack {
@@ -41,31 +41,39 @@ struct DetailView: View {
             .padding(.horizontal) // Adds horizontal padding to the HStack
             
             ScrollView {
-                Text( self.websocket.isStreaming ? "Streaming...."+self.websocket.streamedText : record.summary )
-                    .font(.title3) // Increase the font size to make it more readable
-                    .foregroundColor(.primary)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading) // Aligns the text to the top
-                    .padding()
+                if self.websocket.isStreaming {
+                    ScrollViewReader { proxy in
+                        let message = "Streaming....\n"+self.websocket.streamedText
+                        Text(message)
+                            .id(message)
+                            .onChange(of: message, {
+                                proxy.scrollTo(message, anchor: .bottom)
+                            })
+                    }
+                } else {
+                    Text( record.summary )
+                        .padding()
+                }
             }
         }
         .navigationTitle("Summary")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar(content: {
             ToolbarItemGroup(placement: .bottomBar) {
-                
-                Button("Redo summary") {        // regenerate AI summary
+                Button("Regenerate summary") {        // regenerate AI summary
                     isShowingDialog = true
                 }
-                .confirmationDialog("Redo", isPresented: $isShowingDialog) {
-                    Button("Redo", role: .destructive) {
+                .confirmationDialog(
+                    Text("Regenerate summary?"),
+                    isPresented: $isShowingDialog
+                ) {
+                    Button("Just do it", role: .destructive) {
                         Task {
                             self.websocket.sendToAI(record.transcript, settings: self.settings[0]) { summary in
                                 record.summary = summary
+                                try? modelContext.save()
                             }
                         }
-                    }
-                    Button("Cancel", role: .cancel) {
-                        isShowingDialog = false
                     }
                 }
             }
