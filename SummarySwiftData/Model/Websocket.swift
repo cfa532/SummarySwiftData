@@ -9,7 +9,6 @@ import Foundation
 
 @MainActor
 class Websocket: NSObject, URLSessionWebSocketDelegate, ObservableObject {
-    
     @Published var isStreaming: Bool = false
     @Published var streamedText: String = ""
     
@@ -107,5 +106,32 @@ class Websocket: NSObject, URLSessionWebSocketDelegate, ObservableObject {
         }
         wsTask?.cancel(with: .goingAway, reason: nil)
 //        urlSession?.invalidateAndCancel()
+    }
+}
+
+extension Websocket {
+    @MainActor func sendToAI(_ rawText: String, settings: AppSettings, action: @escaping (_ summary: String)->Void) {
+        let msg = ["input":[
+            "prompt": settings.prompt,
+            "rawtext": rawText],
+                   "parameters":[
+                    "llm": AppConstants.LLM,
+                    "temperature": AppConstants.OpenAITemperature,
+                    "client":"mobile",
+                    "model": AppConstants.OpenAIModel]] as [String : Any]
+        let jsonData = try! JSONSerialization.data(withJSONObject: msg)
+        Task {
+            // Convert the Data to String
+            if let jsonString = String(data: jsonData, encoding: .utf8) {
+                self.wsUrl = settings.wssURL
+                self.wsTask = urlSession!.webSocketTask(with: URL(string: self.wsUrl!)!)
+                self.send(jsonString) { error in
+//                    errorWrapper = ErrorWrapper(error: error, guidance: "Cannot connect to Websocket. Try it later.")
+                    fatalError("Could not send to websocket: \(error)")
+                }
+                self.receive(action: action)
+                self.resume()
+            }
+        }
     }
 }

@@ -6,11 +6,16 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct DetailView: View {
+    @Environment(\.modelContext) private var modelContext
+    @Query private var settings: [AppSettings]
     var record: AudioRecord
     @State private var presentRawText = false
-    
+    @StateObject private var websocket = Websocket()
+    @State private var isShowingDialog = false
+
     var body: some View {
         VStack (alignment: .leading, spacing: 20) {
             HStack {
@@ -35,22 +40,36 @@ struct DetailView: View {
             }
             .padding(.horizontal) // Adds horizontal padding to the HStack
             
-//            Text("Summary")
-//                .font(.headline)
-//                .padding(.top)
-//                .frame(maxWidth: .infinity, alignment: .leading)
-//                .padding(.horizontal)
-            
             ScrollView {
-                Text(record.summary.isEmpty ? record.transcript : record.summary )
+                Text( self.websocket.isStreaming ? "Streaming...."+self.websocket.streamedText : record.summary )
                     .font(.title3) // Increase the font size to make it more readable
                     .foregroundColor(.primary)
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading) // Aligns the text to the top
-                .padding()
+                    .padding()
             }
-            .navigationTitle("Summary")
-
         }
+        .navigationTitle("Summary")
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar(content: {
+            ToolbarItemGroup(placement: .bottomBar) {
+                
+                Button("Redo summary") {        // regenerate AI summary
+                    isShowingDialog = true
+                }
+                .confirmationDialog("Redo", isPresented: $isShowingDialog) {
+                    Button("Redo", role: .destructive) {
+                        Task {
+                            self.websocket.sendToAI(record.transcript, settings: self.settings[0]) { summary in
+                                record.summary = summary
+                            }
+                        }
+                    }
+                    Button("Cancel", role: .cancel) {
+                        isShowingDialog = false
+                    }
+                }
+            }
+        })
         .padding() // Adds padding to the VStack
         .sheet(isPresented: $presentRawText, content: {
             NavigationStack {

@@ -20,7 +20,6 @@ struct SummarySwiftDataApp: App {
             AudioRecord.self, AppSettings.self
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
-        
         do {
             return try ModelContainer(for: schema, configurations: [modelConfiguration])
         } catch {
@@ -31,11 +30,9 @@ struct SummarySwiftDataApp: App {
     var body: some Scene {
         WindowGroup {
             TranscriptView(errorWrapper: $errorWrapper)
-                .onAppear(perform: {
-                })
-            //                .task {
-            //                    // do something
-            //                }
+                .task {
+//                    initContext(modelContext: modelContext, settings: settings)
+                }
                 .sheet(item: $errorWrapper) {
                     // store.records = AudioRecord.sampleData
                 } content: { wrapper in
@@ -43,5 +40,25 @@ struct SummarySwiftDataApp: App {
                 }
         }
         .modelContainer(sharedModelContainer)
+    }
+}
+
+func initContext(modelContext: ModelContext, settings: [AppSettings]) {
+    let lc = NSLocale.current.language.languageCode?.identifier
+    print(lc!)
+    if settings.isEmpty {
+        // first run of the App, settings not stored by SwiftData yet.
+        
+        let setting = AppSettings.defaultSettings
+        switch lc {
+        case "en":
+            setting.speechLocale = RecognizerLocals.English.rawValue
+        case "jp":
+            setting.speechLocale = RecognizerLocals.Japanese.rawValue
+        default:
+            setting.speechLocale = RecognizerLocals.Chinese.rawValue
+        }
+        modelContext.insert(setting)
+        try? modelContext.save()
     }
 }
