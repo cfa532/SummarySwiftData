@@ -10,6 +10,7 @@
 	</array>
 	<key>UIBackgroundModes</key>
 	<array>
+		<string>audio</string>
 		<string>bluetooth-central</string>
 		<string>external-accessory</string>
 		<string>fetch</string>
@@ -18,11 +19,7 @@
 	<key>UILaunchScreen</key>
 	<dict>
 		<key>UILaunchScreen</key>
-		<string>Launch Screen</string>
-		<key>UIColorName</key>
-		<string>background_LC</string>
-		<key>UIImageName</key>
-		<string>大耳朵</string>
+		<string>Launch Screen.storyboard</string>
 	</dict>
 </dict>
 </plist>

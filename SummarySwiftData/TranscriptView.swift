@@ -31,8 +31,10 @@ struct TranscriptView: View {
                             .onChange(of: message, {
                                 proxy.scrollTo(message, anchor: .bottom)
                             })
+                            .frame(alignment: .topLeading)
                     }
                 }
+                .padding()
             } else if websocket.isStreaming {
                 ScrollView {
                     ScrollViewReader { proxy in
@@ -44,6 +46,7 @@ struct TranscriptView: View {
                             })
                     }
                 }
+                .padding()
             }
             else {
                 List {

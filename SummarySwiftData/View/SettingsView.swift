@@ -68,13 +68,19 @@ struct SettingsView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItemGroup(placement: .bottomBar) {
-                Button("Reset") {
+                Button(action: {
                     settings[0].prompt = AppSettings.defaultSettings.prompt
                     settings[0].speechLocale = AppSettings.defaultSettings.speechLocale
                     settings[0].audioSilentDB = AppSettings.defaultSettings.audioSilentDB
                     settings[0].wssURL = AppSettings.defaultSettings.wssURL
                     selectedLocale = RecognizerLocals.Chinese
+                }) {
+                    Text("Reset settings").padding(5)
                 }
+                .foregroundColor(.black)
+                .background(Color(white: 0.8))
+                .cornerRadius(5.0)
+                .shadow(color:.gray, radius: 2, x: 2, y: 2)
             }
         }
     }
